@@ -28,8 +28,7 @@ public class TranslatorManagementController : ControllerBase
 
     [HttpGet]
     public async Task<TranslatorModel[]> GetTranslators()
-    {
-        var aa = await mediator.Send(new GetTranslators(null));
+    {        
         return _context.Translators.ToArray();
     }
 
