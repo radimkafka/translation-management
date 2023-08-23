@@ -1,16 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TranslationManagement.Api.Controlers;
 using TranslationManagement.Api.Controllers;
+using TranslationManagement.Api.Models;
 
-namespace TranslationManagement.Api
+namespace TranslationManagement.Api;
+
+public class AppDbContext : DbContext
 {
-    public class AppDbContext : DbContext
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-        }
-
-        public DbSet<TranslationJobController.TranslationJob> TranslationJobs { get; set; }
-        public DbSet<TranslatorManagementController.TranslatorModel> Translators { get; set; }
     }
+
+    public DbSet<TranslationJobController.TranslationJob> TranslationJobs { get; set; }
+    public DbSet<TranslatorModel> Translators { get; set; }
 }

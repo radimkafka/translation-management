@@ -1,28 +1,33 @@
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using TranslationManagement.Api;
+using TranslationManagement.Business.Queries;
 
-namespace TranslationManagement.Api
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddMediatR(cfg => {
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(GetTranslators).Assembly);
+});
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers();
+builder.Services.AddSwaggerGen(c =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var host = CreateHostBuilder(args).Build();
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "TranslationManagement.Api", Version = "v1" });
+});
 
-            // automatic startup database migration
-            var scope = host.Services.GetService<IServiceScopeFactory>().CreateScope();
-            scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite("Data Source=TranslationAppDatabase.db"));
 
-            host.Run();
-        }
+var app = builder.Build();
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
-}
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TranslationManagement.Api v1"));
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+app.Run();
