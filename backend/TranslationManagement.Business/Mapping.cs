@@ -13,14 +13,14 @@ internal static class Mapping
         CreditCardNumber = entity.CreditCardNumber,
         HourlyRate = entity.HourlyRate,
         Name = entity.Name,
-        Status = entity.Status
+        Status = Enum.Parse<TranslatorStatusDto>(entity.Status)
     };
-    public static Translator  ToEntity(this AddTranslatorDto dto) => new()
+    public static Translator ToEntity(this AddTranslatorDto dto) => new()
     {
         CreditCardNumber = dto.CreditCardNumber,
         HourlyRate = dto.HourlyRate,
         Name = dto.Name,
-        Status = dto.Status
+        Status = dto.Status.ToString()
     };
 
 }

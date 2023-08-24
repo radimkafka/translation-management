@@ -17,7 +17,12 @@ public class GetTranslatorsHandler : IRequestHandler<GetTranslators, TranslatorD
 
     public async Task<TranslatorDto[]> Handle(GetTranslators request, CancellationToken cancellationToken)
     {
-        var data = await _appDbContext.Translators.ToArrayAsync(cancellationToken);
+        var query = _appDbContext.Translators.AsQueryable();
+        if (!string.IsNullOrEmpty(request.Name))
+        {
+            query = query.Where(a => a.Name == request.Name);
+        }
+        var data = await query.ToArrayAsync(cancellationToken);
         return data.ToDto().ToArray();
     }
 }

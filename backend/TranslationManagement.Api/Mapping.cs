@@ -13,7 +13,7 @@ internal static class Mapping
         CreditCardNumber = entity.CreditCardNumber,
         HourlyRate = entity.HourlyRate,
         Name = entity.Name,
-        Status = entity.Status
+        Status = (TranslatorStatusModel)entity.Status
     };
 
     public static AddTranslatorDto ToDto(this AddTranslatorModel entity) => new()
@@ -21,7 +21,7 @@ internal static class Mapping
         CreditCardNumber = entity.CreditCardNumber,
         HourlyRate = entity.HourlyRate,
         Name = entity.Name,
-        Status = entity.Status
+        Status = (TranslatorStatusDto)entity.Status
     };
 
 }

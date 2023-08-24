@@ -1,12 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Xml.Linq;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using TranslationManagement.Api.Models;
 using TranslationManagement.Business.Commands;
 using TranslationManagement.Business.Queries;
@@ -18,7 +13,6 @@ namespace TranslationManagement.Api.Controlers;
 [Route("api/TranslatorsManagement/Translators")]
 public class TranslatorManagementController : ControllerBase
 {
-    public static readonly string[] TranslatorStatuses = { "Applicant", "Certified", "Deleted" };
 
     private readonly ILogger<TranslatorManagementController> _logger;
     private readonly IMediator _mediator;
@@ -47,19 +41,16 @@ public class TranslatorManagementController : ControllerBase
         return Ok(data);
     }
 
-    [HttpPut("Status")]
-    public string UpdateTranslatorStatus(int Translator, string newStatus = "")
+    [HttpPut("Status/{id}")]
+    public string UpdateTranslatorStatus([FromRoute] int id, [FromBody, Required] TranslatorStatusModel status)
     {
-        _logger.LogInformation("User status update request: " + newStatus + " for user " + Translator.ToString());
-        if (TranslatorStatuses.Where(status => status == newStatus).Count() == 0)
-        {
-            throw new ArgumentException("unknown status");
-        }
+        throw new NotImplementedException();
+        //_logger.LogInformation("User status update request: {status} for user {id}", status, id.ToString());
 
-        var job = _context.Translators.Single(j => j.Id == Translator);
-        job.Status = newStatus;
-        _context.SaveChanges();
+        //var job = _context.Translators.Single(j => j.Id == id);
+        //job.Status = status;
+        //_context.SaveChanges();
 
-        return "updated";
+        //return "updated";
     }
 }
