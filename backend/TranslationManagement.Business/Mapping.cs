@@ -23,4 +23,16 @@ internal static class Mapping
         Status = dto.Status.ToString()
     };
 
+    public static IEnumerable<JobDto> ToDto(this IEnumerable<Job> entity) => entity.Select(ToDto);
+
+    public static JobDto ToDto(this Job entity) => new()
+    {
+        Id = entity.Id,
+        CustomerName = entity.CustomerName,
+        OriginalContent = entity.OriginalContent,
+        Price = entity.Price,
+        Status = entity.Status,
+        TranslatedContent = entity.TranslatedContent
+    };
+
 }

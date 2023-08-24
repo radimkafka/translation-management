@@ -1,47 +1,51 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Xml;
 using System.Xml.Linq;
 using External.ThirdParty.Services;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TranslationManagement.Api.Controlers;
 using TranslationManagement.Api.Models;
+using TranslationManagement.Business;
 using TranslationManagement.Data;
 
 namespace TranslationManagement.Api.Controllers
 {
     [ApiController]
-    [Route("api/jobs/[action]")]
-    public class TranslationJobController : ControllerBase
+    [Route("api/jobs")]
+    public class JobsController : ControllerBase
     {
-        private AppDbContext _context;
-        private readonly ILogger<TranslatorManagementController> _logger;
+        private readonly ILogger<TranslatorsController> _logger;
+        private readonly IMediator _mediator;
 
-        public TranslationJobController(IServiceScopeFactory scopeFactory, ILogger<TranslatorManagementController> logger)
+        public JobsController(ILogger<TranslatorsController> logger, IMediator mediator)
         {
-            _context = scopeFactory.CreateScope().ServiceProvider.GetService<AppDbContext>();
             _logger = logger;
-        }
+            _mediator = mediator;
+        }   
 
         [HttpGet]
-        public TranslationJobModel[] GetJobs()
+        [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(JobModel[]))]
+        public async Task<IActionResult> GetJobs()
         {
-            throw new NotImplementedException();
-            //return _context.TranslationJobs.ToArray();
+            var data = await _mediator.Send(new GetJobs());
+            return Ok(data.ToModel().ToArray());
         }
 
         const double PricePerCharacter = 0.01;
-        private void SetPrice(TranslationJobModel job)
+        private void SetPrice(JobModel job)
         {
             job.Price = job.OriginalContent.Length * PricePerCharacter;
         }
 
         [HttpPost]
-        public bool CreateJob(TranslationJobModel job)
+        public bool CreateJob(JobModel job)
         {
             throw new NotImplementedException();
             //job.Status = "New";
@@ -61,7 +65,7 @@ namespace TranslationManagement.Api.Controllers
             //return success;
         }
 
-        [HttpPost]
+        [HttpPost("file")]
         public bool CreateJobWithFile(IFormFile file, string customer)
         {
             var reader = new StreamReader(file.OpenReadStream());
@@ -82,7 +86,7 @@ namespace TranslationManagement.Api.Controllers
                 throw new NotSupportedException("unsupported file");
             }
 
-            var newJob = new TranslationJobModel()
+            var newJob = new JobModel()
             {
                 OriginalContent = content,
                 TranslatedContent = "",
@@ -94,7 +98,7 @@ namespace TranslationManagement.Api.Controllers
             return CreateJob(newJob);
         }
 
-        [HttpPost]
+        [HttpPut]
         public string UpdateJobStatus(int jobId, int translatorId, string newStatus = "")
         {
             throw new NotImplementedException();
