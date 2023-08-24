@@ -1,68 +1,57 @@
-﻿using System;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using TranslationManagement.Api.Models;
+using TranslationManagement.Business;
+using TranslationManagement.Business.Dto;
+using TranslationManagement.Business.Exceptions;
 
-namespace TranslationManagement.Api.Controlers
+namespace TranslationManagement.Api.Controlers;
+
+[ApiController]
+[Route("api/Translators")]
+public class TranslatorManagementController : ControllerBase
 {
-    [ApiController]
-    [Route("api/TranslatorsManagement/[action]")]
-    public class TranslatorManagementController : ControllerBase
+
+    private readonly ILogger<TranslatorManagementController> _logger;
+    private readonly IMediator _mediator;
+
+    public TranslatorManagementController(ILogger<TranslatorManagementController> logger, IMediator mediator)
     {
-        public class TranslatorModel
+        _logger = logger;
+        _mediator = mediator;
+    }
+
+    [HttpGet]
+    [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(TranslatorModel[]))]
+    public async Task<IActionResult> GetTranslators([FromQuery] string? name)
+    {
+        var data = await _mediator.Send(new GetTranslators(name));
+        return Ok(data.ToModel().ToArray());
+    }
+
+    [HttpPost]
+    [ProducesResponseType((int)HttpStatusCode.Created, Type = typeof(int))]
+    public async Task<IActionResult> AddTranslator(AddTranslatorModel translator)
+    {
+        var data = await _mediator.Send(new AddTranslator(translator.ToDto()));
+        return Ok(data);
+    }
+
+    [HttpPut("Status/{id:min(1)}")]
+    [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(int))]
+    public async Task<IActionResult> UpdateTranslatorStatus([FromRoute] int id, [FromBody, Required] TranslatorStatusModel status)
+    {
+        _logger.LogInformation("User status update request: {status} for user {id}", status, id.ToString());
+        try
         {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public string HourlyRate { get; set; }
-            public string Status { get; set; }
-            public string CreditCardNumber { get; set; }
+            await _mediator.Send(new UpdateTranslatorStatus(id, (TranslatorStatusDto)status));
+            return Ok();
         }
-
-        public static readonly string[] TranslatorStatuses = { "Applicant", "Certified", "Deleted" };
-
-        private readonly ILogger<TranslatorManagementController> _logger;
-        private AppDbContext _context;
-
-        public TranslatorManagementController(IServiceScopeFactory scopeFactory, ILogger<TranslatorManagementController> logger)
+        catch (NotFoundException)
         {
-            _context = scopeFactory.CreateScope().ServiceProvider.GetService<AppDbContext>();
-            _logger = logger;
-        }
-
-        [HttpGet]
-        public TranslatorModel[] GetTranslators()
-        {
-            return _context.Translators.ToArray();
-        }
-
-        [HttpGet]
-        public TranslatorModel[] GetTranslatorsByName(string name)
-        {
-            return _context.Translators.Where(t => t.Name == name).ToArray();
-        }
-
-        [HttpPost]
-        public bool AddTranslator(TranslatorModel translator)
-        {
-            _context.Translators.Add(translator);
-            return _context.SaveChanges() > 0;
-        }
-        
-        [HttpPost]
-        public string UpdateTranslatorStatus(int Translator, string newStatus = "")
-        {
-            _logger.LogInformation("User status update request: " + newStatus + " for user " + Translator.ToString());
-            if (TranslatorStatuses.Where(status => status == newStatus).Count() == 0)
-            {
-                throw new ArgumentException("unknown status");
-            }
-
-            var job = _context.Translators.Single(j => j.Id == Translator);
-            job.Status = newStatus;
-            _context.SaveChanges();
-
-            return "updated";
+            return NotFound();
         }
     }
 }
