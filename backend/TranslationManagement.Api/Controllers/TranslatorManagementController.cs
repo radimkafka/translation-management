@@ -10,7 +10,7 @@ using TranslationManagement.Business.Exceptions;
 namespace TranslationManagement.Api.Controlers;
 
 [ApiController]
-[Route("api/TranslatorsManagement/Translators")]
+[Route("api/Translators")]
 public class TranslatorManagementController : ControllerBase
 {
 
