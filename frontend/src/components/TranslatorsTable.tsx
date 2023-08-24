@@ -7,22 +7,26 @@ const thanslatorsTable = ({ data, loading }: Props) => {
 
   return (
     <table>
-      <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Hourly Rate</th>
-        <th>Status</th>
-        <th>Credit Card Number</th>
-      </tr>
-      {data?.map((a) => (
+      <thead>
         <tr>
-          <th>{a.id}</th>
-          <th>{a.name}</th>
-          <th>{a.hourlyRate}</th>
-          <th>{a.status}</th>
-          <th>{a.creditCardNumber}</th>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Hourly Rate</th>
+          <th>Status</th>
+          <th>Credit Card Number</th>
         </tr>
-      ))}
+      </thead>
+      <tbody>
+        {data?.map(a => (
+          <tr key={a.id}>
+            <td>{a.id}</td>
+            <td>{a.name}</td>
+            <td>{a.hourlyRate}</td>
+            <td>{a.status}</td>
+            <td>{a.creditCardNumber}</td>
+          </tr>
+        ))}
+      </tbody>
     </table>
   );
 };

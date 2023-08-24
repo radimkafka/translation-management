@@ -1,6 +1,6 @@
 {
     "runtime": "Net70",
-    "defaultVariables": null,
+    "defaultVariables": null,    
     "documentGenerator": {
       "fromDocument": {
         "url": "http://localhost:5000/swagger/v1/swagger.json",
@@ -12,13 +12,15 @@
         "typeScriptVersion": 5.1,
         "exportTypes": true,
         "output": "src/types.generated.ts",
+        "extensionCode": "src/extensionCode.ts",
         "generateClientClasses": true,
         "generateClientInterfaces": false,
         "className": "{controller}Client",
         "template": "Axios",
-        "wrapResponses": true,
         "promiseType": "Promise",
-        "wrapDtoExceptions": true,        
+        "wrapDtoExceptions": true,       
+        "useTransformOptionsMethod": true,
+        "clientBaseClass": "clientBase", 
         "protectedMethods": [],
         "exceptionClass": "ApiException",
         "operationGenerationMode": "MultipleClientsFromFirstTagAndOperationId",
@@ -35,7 +37,7 @@
         "markOptionalProperties": false,
         "generateCloneMethod": false,
         "generateDefaultValues": true,
-        "generateConstructorInterface": true
+        "generateConstructorInterface": true      
       }
     }
   }

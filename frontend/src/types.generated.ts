@@ -8,15 +8,17 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-import axios, { AxiosError } from 'axios';
+import clientBase from "./ClientBase";import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
-export class JobsClient {
+export class JobsClient extends clientBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        super();
 
         this.instance = instance ? instance : axios.create();
 
@@ -27,7 +29,7 @@ export class JobsClient {
     /**
      * @return Success
      */
-    jobsAll( cancelToken?: CancelToken | undefined): Promise<SwaggerResponse<JobModel[]>> {
+    jobsAll( cancelToken?: CancelToken | undefined): Promise<JobModel[]> {
         let url_ = this.baseUrl + "/api/jobs";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -40,7 +42,9 @@ export class JobsClient {
             cancelToken
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
             if (isAxiosError(_error) && _error.response) {
                 return _error.response;
             } else {
@@ -51,7 +55,7 @@ export class JobsClient {
         });
     }
 
-    protected processJobsAll(response: AxiosResponse): Promise<SwaggerResponse<JobModel[]>> {
+    protected processJobsAll(response: AxiosResponse): Promise<JobModel[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -66,20 +70,20 @@ export class JobsClient {
             let result200: any = null;
             let resultData200  = _responseText;
             result200 = JSON.parse(resultData200);
-            return Promise.resolve<SwaggerResponse<JobModel[]>>(new SwaggerResponse<JobModel[]>(status, _headers, result200));
+            return Promise.resolve<JobModel[]>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<SwaggerResponse<JobModel[]>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<JobModel[]>(null as any);
     }
 
     /**
      * @param body (optional) 
      * @return Created
      */
-    jobs(body?: AddJobModel | undefined, cancelToken?: CancelToken | undefined): Promise<SwaggerResponse<number>> {
+    jobs(body?: AddJobModel | undefined, cancelToken?: CancelToken | undefined): Promise<number> {
         let url_ = this.baseUrl + "/api/jobs";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -96,7 +100,9 @@ export class JobsClient {
             cancelToken
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
             if (isAxiosError(_error) && _error.response) {
                 return _error.response;
             } else {
@@ -107,7 +113,7 @@ export class JobsClient {
         });
     }
 
-    protected processJobs(response: AxiosResponse): Promise<SwaggerResponse<number>> {
+    protected processJobs(response: AxiosResponse): Promise<number> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -122,13 +128,13 @@ export class JobsClient {
             let result201: any = null;
             let resultData201  = _responseText;
             result201 = JSON.parse(resultData201);
-            return Promise.resolve<SwaggerResponse<number>>(new SwaggerResponse<number>(status, _headers, result201));
+            return Promise.resolve<number>(result201);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<SwaggerResponse<number>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<number>(null as any);
     }
 
     /**
@@ -136,7 +142,7 @@ export class JobsClient {
      * @param file (optional) 
      * @return Created
      */
-    file(customer?: string | undefined, file?: FileParameter | undefined, cancelToken?: CancelToken | undefined): Promise<SwaggerResponse<number>> {
+    file(customer?: string | undefined, file?: FileParameter | undefined, cancelToken?: CancelToken | undefined): Promise<number> {
         let url_ = this.baseUrl + "/api/jobs/file?";
         if (customer === null)
             throw new Error("The parameter 'customer' cannot be null.");
@@ -160,7 +166,9 @@ export class JobsClient {
             cancelToken
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
             if (isAxiosError(_error) && _error.response) {
                 return _error.response;
             } else {
@@ -171,7 +179,7 @@ export class JobsClient {
         });
     }
 
-    protected processFile(response: AxiosResponse): Promise<SwaggerResponse<number>> {
+    protected processFile(response: AxiosResponse): Promise<number> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -186,20 +194,20 @@ export class JobsClient {
             let result201: any = null;
             let resultData201  = _responseText;
             result201 = JSON.parse(resultData201);
-            return Promise.resolve<SwaggerResponse<number>>(new SwaggerResponse<number>(status, _headers, result201));
+            return Promise.resolve<number>(result201);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<SwaggerResponse<number>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<number>(null as any);
     }
 
     /**
      * @param body (optional) 
      * @return Success
      */
-    status(body?: UpdateJobStatusModel | undefined, cancelToken?: CancelToken | undefined): Promise<SwaggerResponse<void>> {
+    status(body?: UpdateJobStatusModel | undefined, cancelToken?: CancelToken | undefined): Promise<void> {
         let url_ = this.baseUrl + "/api/jobs/status";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -215,7 +223,9 @@ export class JobsClient {
             cancelToken
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
             if (isAxiosError(_error) && _error.response) {
                 return _error.response;
             } else {
@@ -226,7 +236,7 @@ export class JobsClient {
         });
     }
 
-    protected processStatus(response: AxiosResponse): Promise<SwaggerResponse<void>> {
+    protected processStatus(response: AxiosResponse): Promise<void> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -238,22 +248,24 @@ export class JobsClient {
         }
         if (status === 200) {
             const _responseText = response.data;
-            return Promise.resolve<SwaggerResponse<void>>(new SwaggerResponse<void>(status, _headers, null as any));
+            return Promise.resolve<void>(null as any);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<SwaggerResponse<void>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<void>(null as any);
     }
 }
 
-export class TranslatorsClient {
+export class TranslatorsClient extends clientBase {
     private instance: AxiosInstance;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, instance?: AxiosInstance) {
+
+        super();
 
         this.instance = instance ? instance : axios.create();
 
@@ -265,7 +277,7 @@ export class TranslatorsClient {
      * @param name (optional) 
      * @return Success
      */
-    translatorsAll(name?: string | undefined, cancelToken?: CancelToken | undefined): Promise<SwaggerResponse<TranslatorModel[]>> {
+    translatorsAll(name?: string | undefined, cancelToken?: CancelToken | undefined): Promise<TranslatorModel[]> {
         let url_ = this.baseUrl + "/api/Translators?";
         if (name === null)
             throw new Error("The parameter 'name' cannot be null.");
@@ -282,7 +294,9 @@ export class TranslatorsClient {
             cancelToken
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
             if (isAxiosError(_error) && _error.response) {
                 return _error.response;
             } else {
@@ -293,7 +307,7 @@ export class TranslatorsClient {
         });
     }
 
-    protected processTranslatorsAll(response: AxiosResponse): Promise<SwaggerResponse<TranslatorModel[]>> {
+    protected processTranslatorsAll(response: AxiosResponse): Promise<TranslatorModel[]> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -308,20 +322,20 @@ export class TranslatorsClient {
             let result200: any = null;
             let resultData200  = _responseText;
             result200 = JSON.parse(resultData200);
-            return Promise.resolve<SwaggerResponse<TranslatorModel[]>>(new SwaggerResponse<TranslatorModel[]>(status, _headers, result200));
+            return Promise.resolve<TranslatorModel[]>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<SwaggerResponse<TranslatorModel[]>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<TranslatorModel[]>(null as any);
     }
 
     /**
      * @param body (optional) 
      * @return Created
      */
-    translators(body?: AddTranslatorModel | undefined, cancelToken?: CancelToken | undefined): Promise<SwaggerResponse<number>> {
+    translators(body?: AddTranslatorModel | undefined, cancelToken?: CancelToken | undefined): Promise<number> {
         let url_ = this.baseUrl + "/api/Translators";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -338,7 +352,9 @@ export class TranslatorsClient {
             cancelToken
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
             if (isAxiosError(_error) && _error.response) {
                 return _error.response;
             } else {
@@ -349,7 +365,7 @@ export class TranslatorsClient {
         });
     }
 
-    protected processTranslators(response: AxiosResponse): Promise<SwaggerResponse<number>> {
+    protected processTranslators(response: AxiosResponse): Promise<number> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -364,19 +380,19 @@ export class TranslatorsClient {
             let result201: any = null;
             let resultData201  = _responseText;
             result201 = JSON.parse(resultData201);
-            return Promise.resolve<SwaggerResponse<number>>(new SwaggerResponse<number>(status, _headers, result201));
+            return Promise.resolve<number>(result201);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<SwaggerResponse<number>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<number>(null as any);
     }
 
     /**
      * @return Success
      */
-    status(id: number, body: TranslatorStatusModel, cancelToken?: CancelToken | undefined): Promise<SwaggerResponse<number>> {
+    status(id: number, body: TranslatorStatusModel, cancelToken?: CancelToken | undefined): Promise<number> {
         let url_ = this.baseUrl + "/api/Translators/Status/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -396,7 +412,9 @@ export class TranslatorsClient {
             cancelToken
         };
 
-        return this.instance.request(options_).catch((_error: any) => {
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
             if (isAxiosError(_error) && _error.response) {
                 return _error.response;
             } else {
@@ -407,7 +425,7 @@ export class TranslatorsClient {
         });
     }
 
-    protected processStatus(response: AxiosResponse): Promise<SwaggerResponse<number>> {
+    protected processStatus(response: AxiosResponse): Promise<number> {
         const status = response.status;
         let _headers: any = {};
         if (response.headers && typeof response.headers === "object") {
@@ -422,13 +440,13 @@ export class TranslatorsClient {
             let result200: any = null;
             let resultData200  = _responseText;
             result200 = JSON.parse(resultData200);
-            return Promise.resolve<SwaggerResponse<number>>(new SwaggerResponse<number>(status, _headers, result200));
+            return Promise.resolve<number>(result200);
 
         } else if (status !== 200 && status !== 204) {
             const _responseText = response.data;
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-        return Promise.resolve<SwaggerResponse<number>>(new SwaggerResponse(status, _headers, null as any));
+        return Promise.resolve<number>(null as any);
     }
 }
 
@@ -479,19 +497,6 @@ export interface UpdateJobStatusModel {
     jobId: number;
     translatorId: number;
     status: JobStatusModel;
-}
-
-export class SwaggerResponse<TResult> {
-    status: number;
-    headers: { [key: string]: any; };
-    result: TResult;
-
-    constructor(status: number, headers: { [key: string]: any; }, result: TResult)
-    {
-        this.status = status;
-        this.headers = headers;
-        this.result = result;
-    }
 }
 
 export interface FileParameter {

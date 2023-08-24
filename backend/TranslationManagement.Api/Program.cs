@@ -7,13 +7,17 @@ using TranslationManagement.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMediatR(cfg => 
-{ 
-    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly); 
-    cfg.RegisterServicesFromAssembly(typeof(GetTranslators).Assembly); 
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(GetTranslators).Assembly);
 });
 
-builder.Services.AddTransient<INotificationService,UnreliableNotificationService>();
+builder.Services.AddTransient<INotificationService, UnreliableNotificationService>();
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -32,6 +36,7 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TranslationManagement.Api v1"));
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 
