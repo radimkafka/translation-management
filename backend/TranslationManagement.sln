@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
 		TranslationManagement.Api\Dockerfile = TranslationManagement.Api\Dockerfile
+		job.txt = job.txt
+		job.xml = job.xml
 		..\readme.md = ..\readme.md
 	EndProjectSection
 EndProject
@@ -22,7 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleData", "SampleData", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationManagement.Business", "TranslationManagement.Business\TranslationManagement.Business.csproj", "{25C045F8-80F5-4712-A086-9F242F40F977}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslationManagement.Data", "TranslationManagement.Data\TranslationManagement.Data.csproj", "{11A011C8-AB16-4FE2-A222-D3915608863A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationManagement.Data", "TranslationManagement.Data\TranslationManagement.Data.csproj", "{11A011C8-AB16-4FE2-A222-D3915608863A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

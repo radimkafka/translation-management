@@ -8,12 +8,14 @@ using External.ThirdParty.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TranslationManagement.Api.Controlers;
 using TranslationManagement.Api.Models;
 using TranslationManagement.Business;
 using TranslationManagement.Data;
+using TranslationManagement.Data.Entities;
 
 namespace TranslationManagement.Api.Controllers
 {
@@ -28,7 +30,7 @@ namespace TranslationManagement.Api.Controllers
         {
             _logger = logger;
             _mediator = mediator;
-        }   
+        }
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(JobModel[]))]
@@ -37,12 +39,6 @@ namespace TranslationManagement.Api.Controllers
             var data = await _mediator.Send(new GetJobs());
             return Ok(data.ToModel().ToArray());
         }
-
-        //const double PricePerCharacter = 0.01;
-        //private void SetPrice(JobModel job)
-        //{
-        //    job.Price = job.OriginalContent.Length * PricePerCharacter;
-        //}
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created, Type = typeof(int))]
@@ -53,38 +49,28 @@ namespace TranslationManagement.Api.Controllers
         }
 
         [HttpPost("file")]
-        public bool CreateJobWithFile(IFormFile file, string customer)
+        [ProducesResponseType((int)HttpStatusCode.Created, Type = typeof(int))]
+        public async Task<IActionResult> CreateJobWithFile(IFormFile file, string? customer)
         {
-            throw new NotImplementedException();
-
-            //var reader = new StreamReader(file.OpenReadStream());
-            //string content;
-
-            //if (file.FileName.EndsWith(".txt"))
-            //{
-            //    content = reader.ReadToEnd();
-            //}
-            //else if (file.FileName.EndsWith(".xml"))
-            //{
-            //    var xdoc = XDocument.Parse(reader.ReadToEnd());
-            //    content = xdoc.Root.Element("Content").Value;
-            //    customer = xdoc.Root.Element("Customer").Value.Trim();
-            //}
-            //else
-            //{
-            //    throw new NotSupportedException("unsupported file");
-            //}
-
-            //var newJob = new JobModel()
-            //{
-            //    OriginalContent = content,
-            //    TranslatedContent = "",
-            //    CustomerName = customer,
-            //};
-
-            //SetPrice(newJob);
-
-            //return CreateJob(newJob);
+            string? customerName;
+            string content;
+            try
+            {
+                (customerName, content) = JobFileReader.Read(file);
+            }
+            catch (NotSupportedException e)
+            {
+                return BadRequest(e.Message);
+            }
+            if (string.IsNullOrEmpty(customerName) && string.IsNullOrEmpty(customer))
+            {
+                var errors = new ModelStateDictionary();
+                errors.AddModelError(nameof(customer), "Cannot be empty!");
+                return BadRequest(errors);
+            }
+            customerName ??= customer;
+            var data = await _mediator.Send(new AddJob(new() { CustomerName = customerName!, OriginalContent = content }));
+            return Ok(data);
         }
 
         [HttpPut]
