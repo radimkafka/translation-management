@@ -25,7 +25,7 @@ namespace TranslationManagement.Test
         }
 
         [Fact]
-        public async Task Status_UpdateStatus_When_Handle()
+        public async Task Status_Update_When_Handle()
         {
             var update = new UpdateJobStatusDto() { JobId = 1, Status = JobStatusDto.Inprogress };
 
