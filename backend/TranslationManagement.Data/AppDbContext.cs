@@ -9,6 +9,6 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<TranslationJob> TranslationJobs { get; set; }
+    public DbSet<Job> TranslationJobs { get; set; }
     public DbSet<Translator> Translators { get; set; }
 }

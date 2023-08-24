@@ -5,3 +5,4 @@ namespace TranslationManagement.Business;
 
 public record AddTranslator(AddTranslatorDto Translator) : IRequest<int>;
 public record UpdateTranslatorStatus(int TranslatorId, TranslatorStatusDto Status) : IRequest;
+public record AddJob(AddJobDto Job) : IRequest<int>;

@@ -11,13 +11,13 @@ namespace TranslationManagement.Api.Controlers;
 
 [ApiController]
 [Route("api/Translators")]
-public class TranslatorManagementController : ControllerBase
+public class TranslatorsController : ControllerBase
 {
 
-    private readonly ILogger<TranslatorManagementController> _logger;
+    private readonly ILogger<TranslatorsController> _logger;
     private readonly IMediator _mediator;
 
-    public TranslatorManagementController(ILogger<TranslatorManagementController> logger, IMediator mediator)
+    public TranslatorsController(ILogger<TranslatorsController> logger, IMediator mediator)
     {
         _logger = logger;
         _mediator = mediator;

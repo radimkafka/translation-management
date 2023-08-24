@@ -1,6 +1,6 @@
 ﻿namespace TranslationManagement.Api.Models;
 
-public class TranslationJobModel
+public class JobModel
 {
     public int Id { get; set; }
     public string CustomerName { get; set; }

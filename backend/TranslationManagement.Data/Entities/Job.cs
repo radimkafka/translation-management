@@ -2,7 +2,7 @@
 
 namespace TranslationManagement.Data.Entities;
 
-public class TranslationJob
+public class Job
 {
     [Key]
     public int Id { get; set; }
