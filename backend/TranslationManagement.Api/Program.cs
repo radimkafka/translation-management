@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TranslationManagement.Api;
 using TranslationManagement.Business.Queries;
+using TranslationManagement.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

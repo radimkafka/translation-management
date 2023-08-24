@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TranslationManagement.Data.Entities;
 
-namespace TranslationManagement.Business;
+namespace TranslationManagement.Data;
 
 public class AppDbContext : DbContext
 {

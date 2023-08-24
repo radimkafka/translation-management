@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TranslationManagement.Api.Models;
 using TranslationManagement.Business.Queries;
+using TranslationManagement.Data;
 
 namespace TranslationManagement.Api.Controlers;
 
@@ -16,32 +17,35 @@ public class TranslatorManagementController : ControllerBase
     public static readonly string[] TranslatorStatuses = { "Applicant", "Certified", "Deleted" };
 
     private readonly ILogger<TranslatorManagementController> _logger;
-    private readonly IMediator mediator;
+    private readonly IMediator _mediator;
     private AppDbContext _context;
 
     public TranslatorManagementController(IServiceScopeFactory scopeFactory, ILogger<TranslatorManagementController> logger, IMediator mediator)
     {
         _context = scopeFactory.CreateScope().ServiceProvider.GetService<AppDbContext>();
         _logger = logger;
-        this.mediator = mediator;
+        _mediator = mediator;
     }
 
     [HttpGet]
     public async Task<TranslatorModel[]> GetTranslators()
-    {        
-        return _context.Translators.ToArray();
+    {
+        var data = await _mediator.Send(new GetTranslators());
+        return data.ToModel().ToArray();
     }
 
     [HttpGet]
     public TranslatorModel[] GetTranslatorsByName(string name)
     {
-        return _context.Translators.Where(t => t.Name == name).ToArray();
+        throw new NotImplementedException(); 
+        //return _context.Translators.Where(t => t.Name == name).ToArray();
     }
 
     [HttpPost]
     public bool AddTranslator(TranslatorModel translator)
     {
-        _context.Translators.Add(translator);
+        throw new NotImplementedException(); 
+        //_context.Translators.Add(translator);
         return _context.SaveChanges() > 0;
     }
     

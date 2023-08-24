@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using TranslationManagement.Business.Dto;
 using TranslationManagement.Business.Queries;
-using TranslationManagement.Data.Entities;
+using TranslationManagement.Data;
 
 namespace TranslationManagement.Business.Handlers;
 
-public class GetTranslatorsHandler : IRequestHandler<GetTranslators, TranslatorDto>
+public class GetTranslatorsHandler : IRequestHandler<GetTranslators, TranslatorDto[]>
 {
     private readonly AppDbContext _appDbContext;
 
@@ -15,9 +15,9 @@ public class GetTranslatorsHandler : IRequestHandler<GetTranslators, TranslatorD
         _appDbContext = appDbContext;
     }
 
-    public async Task<Translator> Handle(GetTranslators request, CancellationToken cancellationToken)
+    public async Task<TranslatorDto[]> Handle(GetTranslators request, CancellationToken cancellationToken)
     {
         var data = await _appDbContext.Translators.ToArrayAsync(cancellationToken);
-        return data;
+        return data.ToDto().ToArray();
     }
 }

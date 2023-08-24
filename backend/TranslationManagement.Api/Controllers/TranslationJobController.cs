@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TranslationManagement.Api.Controlers;
+using TranslationManagement.Data;
 
 namespace TranslationManagement.Api.Controllers
 {
@@ -45,7 +46,8 @@ namespace TranslationManagement.Api.Controllers
         [HttpGet]
         public TranslationJob[] GetJobs()
         {
-            return _context.TranslationJobs.ToArray();
+            throw new NotImplementedException();
+            //return _context.TranslationJobs.ToArray();
         }
 
         const double PricePerCharacter = 0.01;
@@ -57,21 +59,22 @@ namespace TranslationManagement.Api.Controllers
         [HttpPost]
         public bool CreateJob(TranslationJob job)
         {
-            job.Status = "New";
-            SetPrice(job);
-            _context.TranslationJobs.Add(job);
-            bool success = _context.SaveChanges() > 0;
-            if (success)
-            {
-                var notificationSvc = new UnreliableNotificationService();
-                while (!notificationSvc.SendNotification("Job created: " + job.Id).Result)
-                {
-                }
+            throw new NotImplementedException();
+            //job.Status = "New";
+            //SetPrice(job);
+            //_context.TranslationJobs.Add(job);
+            //bool success = _context.SaveChanges() > 0;
+            //if (success)
+            //{
+            //    var notificationSvc = new UnreliableNotificationService();
+            //    while (!notificationSvc.SendNotification("Job created: " + job.Id).Result)
+            //    {
+            //    }
 
-                _logger.LogInformation("New job notification sent");
-            }
+            //    _logger.LogInformation("New job notification sent");
+            //}
 
-            return success;
+            //return success;
         }
 
         [HttpPost]
@@ -110,6 +113,8 @@ namespace TranslationManagement.Api.Controllers
         [HttpPost]
         public string UpdateJobStatus(int jobId, int translatorId, string newStatus = "")
         {
+            throw new NotImplementedException();
+            /*
             _logger.LogInformation("Job status update request received: " + newStatus + " for job " + jobId.ToString() + " by translator " + translatorId);
             if (typeof(JobStatuses).GetProperties().Count(prop => prop.Name == newStatus) == 0)
             {
@@ -127,7 +132,7 @@ namespace TranslationManagement.Api.Controllers
 
             job.Status = newStatus;
             _context.SaveChanges();
-            return "updated";
+            return "updated";*/
         }
     }
 }
