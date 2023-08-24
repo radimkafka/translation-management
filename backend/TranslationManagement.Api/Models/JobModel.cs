@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace TranslationManagement.Api.Models;
 
-namespace TranslationManagement.Data.Entities;
-
-public class TranslationJob
+public class JobModel
 {
-    [Key]
     public int Id { get; set; }
     public string CustomerName { get; set; }
     public string Status { get; set; }

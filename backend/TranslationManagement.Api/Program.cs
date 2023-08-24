@@ -1,3 +1,4 @@
+using External.ThirdParty.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
@@ -11,6 +12,8 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly); 
     cfg.RegisterServicesFromAssembly(typeof(GetTranslators).Assembly); 
 });
+
+builder.Services.AddTransient<INotificationService,UnreliableNotificationService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers().AddJsonOptions(options =>
