@@ -15,5 +15,12 @@ internal static class Mapping
         Name = entity.Name,
         Status = entity.Status
     };
+    public static Translator  ToEntity(this AddTranslatorDto dto) => new()
+    {
+        CreditCardNumber = dto.CreditCardNumber,
+        HourlyRate = dto.HourlyRate,
+        Name = dto.Name,
+        Status = dto.Status
+    };
 
 }

@@ -1,6 +1,5 @@
 ﻿using TranslationManagement.Api.Models;
 using TranslationManagement.Business.Dto;
-using TranslationManagement.Data.Entities;
 
 namespace TranslationManagement.Api;
 
@@ -11,6 +10,14 @@ internal static class Mapping
     public static TranslatorModel ToDto(this TranslatorDto entity) => new()
     {
         Id = entity.Id,
+        CreditCardNumber = entity.CreditCardNumber,
+        HourlyRate = entity.HourlyRate,
+        Name = entity.Name,
+        Status = entity.Status
+    };
+
+    public static AddTranslatorDto ToDto(this AddTranslatorModel entity) => new()
+    {
         CreditCardNumber = entity.CreditCardNumber,
         HourlyRate = entity.HourlyRate,
         Name = entity.Name,

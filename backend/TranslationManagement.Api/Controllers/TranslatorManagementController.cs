@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
+using System.Xml.Linq;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TranslationManagement.Api.Models;
+using TranslationManagement.Business.Commands;
 using TranslationManagement.Business.Queries;
 using TranslationManagement.Data;
 
 namespace TranslationManagement.Api.Controlers;
 
 [ApiController]
-[Route("api/TranslatorsManagement/[action]")]
+[Route("api/TranslatorsManagement/Translators")]
 public class TranslatorManagementController : ControllerBase
 {
     public static readonly string[] TranslatorStatuses = { "Applicant", "Certified", "Deleted" };
@@ -28,28 +32,22 @@ public class TranslatorManagementController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<TranslatorModel[]> GetTranslators()
+    [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(TranslatorModel[]))]
+    public async Task<IActionResult> GetTranslators([FromQuery] string? name)
     {
-        var data = await _mediator.Send(new GetTranslators());
-        return data.ToModel().ToArray();
-    }
-
-    [HttpGet]
-    public TranslatorModel[] GetTranslatorsByName(string name)
-    {
-        throw new NotImplementedException(); 
-        //return _context.Translators.Where(t => t.Name == name).ToArray();
+        var data = await _mediator.Send(new GetTranslators(name));
+        return Ok(data.ToModel().ToArray());
     }
 
     [HttpPost]
-    public bool AddTranslator(TranslatorModel translator)
+    [ProducesResponseType((int)HttpStatusCode.Created, Type = typeof(int))]
+    public async Task<IActionResult> AddTranslator(AddTranslatorModel translator)
     {
-        throw new NotImplementedException(); 
-        //_context.Translators.Add(translator);
-        return _context.SaveChanges() > 0;
+        var data = await _mediator.Send(new AddTranslator(translator.ToDto()));
+        return Ok(data);
     }
-    
-    [HttpPost]
+
+    [HttpPut("Status")]
     public string UpdateTranslatorStatus(int Translator, string newStatus = "")
     {
         _logger.LogInformation("User status update request: " + newStatus + " for user " + Translator.ToString());
