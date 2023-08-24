@@ -16,3 +16,5 @@ wwwroot_node
 *.nupkg
 .DS_Store
 /backend/TranslationManagement.Api/TranslationAppDatabase.db
+/backend/TranslationManagement.Api/TranslationAppDatabase.db-shm
+/backend/TranslationManagement.Api/TranslationAppDatabase.db-wal

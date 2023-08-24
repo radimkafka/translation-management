@@ -23,5 +23,4 @@ internal static class Mapping
         Name = entity.Name,
         Status = (TranslatorStatusDto)entity.Status
     };
-
 }
