@@ -1,6 +1,5 @@
 using Moq;
 using Moq.EntityFrameworkCore;
-using System.Net.NetworkInformation;
 using TranslationManagement.Business.Dto;
 using TranslationManagement.Business.Exceptions;
 using TranslationManagement.Business.Handlers;
@@ -15,7 +14,7 @@ namespace TranslationManagement.Test
 
         private readonly static Job[] FakeData = new[]
         {
-            new Job { Id = 1, CustomerName="Customer 1", Status = JobStatusDto.New.ToString() },
+            new Job { Id = 1, CustomerName = "Customer 1", Status = JobStatusDto.New.ToString() },
         };
 
         public UpdateJobStatusHandlerTest()
@@ -34,14 +33,15 @@ namespace TranslationManagement.Test
 
             Assert.Equal(FakeData.First().Status, JobStatusDto.Inprogress.ToString());
         }
-
+         
         [Fact]
         public async Task Status_ThrowNotFoundException_When_Handle()
         {
             var update = new UpdateJobStatusDto() { JobId = 2, Status = JobStatusDto.Inprogress };
-            async Task act() => await _handler.Handle(new Business.UpdateJobStatus(update), CancellationToken.None);
-            await Assert.ThrowsAsync<NotFoundException>(act);            
 
+            async Task act() => await _handler.Handle(new Business.UpdateJobStatus(update), CancellationToken.None);
+
+            await Assert.ThrowsAsync<NotFoundException>(act);
         }
     }
 }
