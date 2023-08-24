@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TranslationManagement.Business.Dto;
-using TranslationManagement.Business.Queries;
 using TranslationManagement.Data;
 
 namespace TranslationManagement.Business.Handlers;

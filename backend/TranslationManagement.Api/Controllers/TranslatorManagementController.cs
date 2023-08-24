@@ -3,9 +3,9 @@ using System.Net;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TranslationManagement.Api.Models;
-using TranslationManagement.Business.Commands;
-using TranslationManagement.Business.Queries;
-using TranslationManagement.Data;
+using TranslationManagement.Business;
+using TranslationManagement.Business.Dto;
+using TranslationManagement.Business.Exceptions;
 
 namespace TranslationManagement.Api.Controlers;
 
@@ -16,11 +16,9 @@ public class TranslatorManagementController : ControllerBase
 
     private readonly ILogger<TranslatorManagementController> _logger;
     private readonly IMediator _mediator;
-    private AppDbContext _context;
 
-    public TranslatorManagementController(IServiceScopeFactory scopeFactory, ILogger<TranslatorManagementController> logger, IMediator mediator)
+    public TranslatorManagementController(ILogger<TranslatorManagementController> logger, IMediator mediator)
     {
-        _context = scopeFactory.CreateScope().ServiceProvider.GetService<AppDbContext>();
         _logger = logger;
         _mediator = mediator;
     }
@@ -41,16 +39,19 @@ public class TranslatorManagementController : ControllerBase
         return Ok(data);
     }
 
-    [HttpPut("Status/{id}")]
-    public string UpdateTranslatorStatus([FromRoute] int id, [FromBody, Required] TranslatorStatusModel status)
+    [HttpPut("Status/{id:min(1)}")]
+    [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(int))]
+    public async Task<IActionResult> UpdateTranslatorStatus([FromRoute] int id, [FromBody, Required] TranslatorStatusModel status)
     {
-        throw new NotImplementedException();
-        //_logger.LogInformation("User status update request: {status} for user {id}", status, id.ToString());
-
-        //var job = _context.Translators.Single(j => j.Id == id);
-        //job.Status = status;
-        //_context.SaveChanges();
-
-        //return "updated";
+        _logger.LogInformation("User status update request: {status} for user {id}", status, id.ToString());
+        try
+        {
+            await _mediator.Send(new UpdateTranslatorStatus(id, (TranslatorStatusDto)status));
+            return Ok();
+        }
+        catch (NotFoundException)
+        {
+            return NotFound();
+        }
     }
 }

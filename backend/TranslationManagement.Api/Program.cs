@@ -1,16 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
-using TranslationManagement.Api;
-using TranslationManagement.Business.Queries;
+using TranslationManagement.Business;
 using TranslationManagement.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMediatR(cfg =>
-{
-    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
-    cfg.RegisterServicesFromAssembly(typeof(GetTranslators).Assembly);
+builder.Services.AddMediatR(cfg => 
+{ 
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly); 
+    cfg.RegisterServicesFromAssembly(typeof(GetTranslators).Assembly); 
 });
 
 builder.Services.AddEndpointsApiExplorer();
