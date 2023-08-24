@@ -1,0 +1,41 @@
+{
+    "runtime": "Net70",
+    "defaultVariables": null,
+    "documentGenerator": {
+      "fromDocument": {
+        "url": "http://localhost:5000/swagger/v1/swagger.json",
+        "output": ""
+      }
+    },
+    "codeGenerators": {
+      "openApiToTypeScriptClient": {
+        "typeScriptVersion": 5.1,
+        "exportTypes": true,
+        "output": "src/types.generated.ts",
+        "generateClientClasses": true,
+        "generateClientInterfaces": false,
+        "className": "{controller}Client",
+        "template": "Axios",
+        "wrapResponses": true,
+        "promiseType": "Promise",
+        "wrapDtoExceptions": true,        
+        "protectedMethods": [],
+        "exceptionClass": "ApiException",
+        "operationGenerationMode": "MultipleClientsFromFirstTagAndOperationId",
+        "excludedParameterNames": [
+          "Accept-Language",
+          "X-Correlation-ID"
+        ],
+        "generateOptionalParameters": true,
+        "generateDtoTypes": true,
+        "typeStyle": "Interface",
+        "enumStyle": "Enum",
+        "dateTimeType": "string",
+        "nullValue": "Undefined",
+        "markOptionalProperties": false,
+        "generateCloneMethod": false,
+        "generateDefaultValues": true,
+        "generateConstructorInterface": true
+      }
+    }
+  }
