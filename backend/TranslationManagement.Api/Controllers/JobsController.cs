@@ -56,7 +56,7 @@ namespace TranslationManagement.Api.Controllers
         public async Task<IActionResult> CreateJobWithFile(IFormFile file, string? customer)
         {
             string? customerName;
-            string content;
+            string? content;
             try
             {
                 (customerName, content) = JobFileReader.Read(file);
@@ -64,6 +64,12 @@ namespace TranslationManagement.Api.Controllers
             catch (NotSupportedException e)
             {
                 return BadRequest(e.Message);
+            }
+            if (string.IsNullOrEmpty(content) )
+            {
+                var errors = new ModelStateDictionary();
+                errors.AddModelError("Content", "Cannot be empty!");
+                return BadRequest(errors);
             }
             if (string.IsNullOrEmpty(customerName) && string.IsNullOrEmpty(customer))
             {
@@ -76,7 +82,7 @@ namespace TranslationManagement.Api.Controllers
             return Ok(data);
         }
 
-        [HttpPut]
+        [HttpPut("status")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> UpdateJobStatus([FromBody] UpdateJobStatusModel jobStatusUpdate)
         {

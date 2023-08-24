@@ -14,7 +14,7 @@ public class AddTranslatorHandler : IRequestHandler<AddTranslator, int>
 
     public async Task<int> Handle(AddTranslator request, CancellationToken cancellationToken)
     {
-        var entity = request.Translator.ToEntity();
+        var entity = request.Data.ToEntity();
         _appDbContext.Translators.Add(entity);
         await _appDbContext.SaveChangesAsync(cancellationToken);        
         return entity.Id;

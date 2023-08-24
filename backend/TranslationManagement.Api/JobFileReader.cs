@@ -4,7 +4,7 @@ namespace TranslationManagement.Api;
 
 internal static class JobFileReader
 {
-    public static (string? customerName, string content) Read(IFormFile file)
+    public static (string? customerName, string? content) Read(IFormFile file)
     {
         return file.FileName switch
         {
@@ -20,12 +20,12 @@ internal static class JobFileReader
         return reader.ReadToEnd();
     }
 
-    private static (string customerName, string content) ReadFromXml(IFormFile file)
+    private static (string? customerName, string? content) ReadFromXml(IFormFile file)
     {
         using var reader = new StreamReader(file.OpenReadStream());
         var xdoc = XDocument.Parse(reader.ReadToEnd());
-        var content = xdoc.Root.Element("Content").Value;
-        var customer = xdoc.Root.Element("Customer").Value.Trim();
+        var content = xdoc?.Root?.Element("Content")?.Value;
+        var customer = xdoc?.Root?.Element("Customer")?.Value.Trim();
         return (customer, content);
     }
 }

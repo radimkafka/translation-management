@@ -16,9 +16,9 @@ public class UpdateJobStatusHandler : IRequestHandler<UpdateJobStatus>
 
     public async Task Handle(UpdateJobStatus request, CancellationToken cancellationToken)
     {
-        var job = await _appDbContext.TranslationJobs.FirstOrDefaultAsync(j => j.Id == request.JobStatusDto.JobId, cancellationToken) ?? throw new NotFoundException();
+        var job = await _appDbContext.TranslationJobs.FirstOrDefaultAsync(j => j.Id == request.Data.JobId, cancellationToken) ?? throw new NotFoundException();
 
-        job.Status = request.JobStatusDto.Status.ToString();
+        job.Status = request.Data.Status.ToString();
         await _appDbContext.SaveChangesAsync(cancellationToken);
     }
 }

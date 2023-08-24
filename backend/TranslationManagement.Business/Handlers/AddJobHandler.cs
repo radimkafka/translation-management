@@ -22,7 +22,7 @@ public class AddJobHandler : IRequestHandler<AddJob, int>
 
     public async Task<int> Handle(AddJob request, CancellationToken cancellationToken)
     {
-        var entity = request.Job.ToEntity();
+        var entity = request.Data.ToEntity();
         entity.Price = GetPrice(entity);
         entity.Status = JobStatusDto.New.ToString();
         _appDbContext.TranslationJobs.Add(entity);

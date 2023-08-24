@@ -5,7 +5,7 @@ using TranslationManagement.Data;
 
 namespace TranslationManagement.Business.Handlers;
 
-public class UpdateTranslatorStatusHandler : IRequestHandler<UpdateTranslatorStatus>
+public class UpdateTranslatorStatusHandler : IRequestHandler<UpdateJobStatus>
 {
     private readonly AppDbContext _appDbContext;
 
@@ -14,10 +14,10 @@ public class UpdateTranslatorStatusHandler : IRequestHandler<UpdateTranslatorSta
         _appDbContext = appDbContext;
     }
 
-    public async Task Handle(UpdateTranslatorStatus request, CancellationToken cancellationToken)
+    public async Task Handle(UpdateJobStatus request, CancellationToken cancellationToken)
     {
-        var entity = await _appDbContext.Translators.FirstOrDefaultAsync(a => a.Id == request.TranslatorId, cancellationToken) ?? throw new NotFoundException();
-        entity.Status = request.Status.ToString();
+        var entity = await _appDbContext.TranslationJobs.FirstOrDefaultAsync(a => a.Id == request.Data.JobId, cancellationToken) ?? throw new NotFoundException();
+        entity.Status = request.Data.Status.ToString();
         await _appDbContext.SaveChangesAsync(cancellationToken);
     }
 }
