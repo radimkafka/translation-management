@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Xml;
 using System.Xml.Linq;
 using External.ThirdParty.Services;
@@ -14,6 +15,8 @@ using Microsoft.Extensions.Logging;
 using TranslationManagement.Api.Controlers;
 using TranslationManagement.Api.Models;
 using TranslationManagement.Business;
+using TranslationManagement.Business.Dto;
+using TranslationManagement.Business.Exceptions;
 using TranslationManagement.Data;
 using TranslationManagement.Data.Entities;
 
@@ -74,28 +77,20 @@ namespace TranslationManagement.Api.Controllers
         }
 
         [HttpPut]
-        public string UpdateJobStatus(int jobId, int translatorId, string newStatus = "")
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IActionResult> UpdateJobStatus([FromBody] UpdateJobStatusModel jobStatusUpdate)
         {
-            throw new NotImplementedException();
-            /*
-            _logger.LogInformation("Job status update request received: " + newStatus + " for job " + jobId.ToString() + " by translator " + translatorId);
-            if (typeof(JobStatuses).GetProperties().Count(prop => prop.Name == newStatus) == 0)
+            _logger.LogInformation("Job status update request received: {newStatus} for job {jobId} by translator {translatorId}", jobStatusUpdate.Status, jobStatusUpdate.JobId.ToString(), jobStatusUpdate.TranslatorId);
+
+            try
             {
-                return "invalid status";
+                await _mediator.Send(new UpdateJobStatus(jobStatusUpdate.ToDto()));
+                return Ok();
             }
-
-            var job = _context.TranslationJobs.Single(j => j.Id == jobId);
-
-            bool isInvalidStatusChange = (job.Status == JobStatuses.New && newStatus == JobStatuses.Completed) ||
-                                         job.Status == JobStatuses.Completed || newStatus == JobStatuses.New;
-            if (isInvalidStatusChange)
+            catch (NotFoundException)
             {
-                return "invalid status change";
+                return NotFound();
             }
-
-            job.Status = newStatus;
-            _context.SaveChanges();
-            return "updated";*/
         }
     }
 }

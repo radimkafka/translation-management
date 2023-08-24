@@ -26,21 +26,28 @@ internal static class Mapping
 
     public static IEnumerable<JobModel> ToModel(this IEnumerable<JobDto> entity) => entity.Select(ToDto);
 
-    public static JobModel ToDto(this JobDto entity) => new()
+    public static JobModel ToDto(this JobDto dto) => new()
     {
-        Id = entity.Id,
-        CustomerName = entity.CustomerName,
-        OriginalContent = entity.OriginalContent,
-        Price = entity.Price,
-        Status = entity.Status,
-        TranslatedContent = entity.TranslatedContent
+        Id = dto.Id,
+        CustomerName = dto.CustomerName,
+        OriginalContent = dto.OriginalContent,
+        Price = dto.Price,
+        Status = dto.Status,
+        TranslatedContent = dto.TranslatedContent
     };
 
-    public static AddJobDto ToDto(this AddJobModel entity) => new()
+    public static AddJobDto ToDto(this AddJobModel model) => new()
     {
-        CustomerName = entity.CustomerName,
-        OriginalContent = entity.OriginalContent,
-        Price = entity.Price,        
-        TranslatedContent = entity.TranslatedContent
+        CustomerName = model.CustomerName,
+        OriginalContent = model.OriginalContent,
+        Price = model.Price,
+        TranslatedContent = model.TranslatedContent
+    };
+
+    public static UpdateJobStatusDto ToDto(this UpdateJobStatusModel model) => new()
+    {
+        JobId = model.JobId,
+        Status = (JobStatusDto)model.Status,
+        TranslatorId = model.TranslatorId
     };
 }
