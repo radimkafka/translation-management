@@ -1,0 +1,20 @@
+services:
+  frontend:
+    container_name: translationmanagementui
+    # image: translationmanagementui
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 5137:80
+
+  backend:
+    container_name: translationmanagementapi
+    # image: translationmanagementapi
+    build:
+      context: ./backend
+      dockerfile: /TranslationManagement.Api/Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:80
+    ports:
+      - 5000:80
