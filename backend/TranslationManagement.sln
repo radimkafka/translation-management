@@ -8,10 +8,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8547FBF7-7179-421B-80BD-2E293D0807A6}"
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
+		..\assignment.md = ..\assignment.md
 		TranslationManagement.Api\Dockerfile = TranslationManagement.Api\Dockerfile
 		job.txt = job.txt
 		job.xml = job.xml
-		..\readme.md = ..\readme.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "External.ThirdParty.Services", "External.ThirdParty.Services\External.ThirdParty.Services.csproj", "{173F3433-4139-404D-A843-BAF43F6164FA}"
@@ -26,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationManagement.Busin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationManagement.Data", "TranslationManagement.Data\TranslationManagement.Data.csproj", "{11A011C8-AB16-4FE2-A222-D3915608863A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslationManagement.Test", "TranslationManagement.Test\TranslationManagement.Test.csproj", "{10D5975B-286F-4791-99AC-5E6F8A1A1885}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationManagement.Test", "TranslationManagement.Test\TranslationManagement.Test.csproj", "{10D5975B-286F-4791-99AC-5E6F8A1A1885}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
