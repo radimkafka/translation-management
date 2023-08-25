@@ -1,7 +1,6 @@
 services:
   frontend:
     container_name: translationmanagementui
-    # image: translationmanagementui
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -10,7 +9,6 @@ services:
 
   backend:
     container_name: translationmanagementapi
-    # image: translationmanagementapi
     build:
       context: ./backend
       dockerfile: /TranslationManagement.Api/Dockerfile
