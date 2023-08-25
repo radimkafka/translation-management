@@ -8,7 +8,7 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-import clientBase from "./ClientBase";import axios, { AxiosError } from 'axios';
+import clientBase from "./clientBase";import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
 export class JobsClient extends clientBase {

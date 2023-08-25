@@ -43,4 +43,10 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using IServiceScope scope = app.Services.CreateScope();
+var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+db.Database.EnsureCreated();
+db.Database.Migrate();
+
 app.Run();
