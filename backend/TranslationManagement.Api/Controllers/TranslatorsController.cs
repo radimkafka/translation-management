@@ -10,7 +10,7 @@ using TranslationManagement.Business.Exceptions;
 namespace TranslationManagement.Api.Controlers;
 
 [ApiController]
-[Route("api/Translators")]
+[Route("api/translators")]
 public class TranslatorsController : ControllerBase
 {
 
@@ -25,28 +25,28 @@ public class TranslatorsController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(TranslatorModel[]))]
-    public async Task<IActionResult> GetTranslators([FromQuery] string? name)
+    public async Task<IActionResult> GetTranslators([FromQuery] string? name, CancellationToken cancellationToken)
     {
-        var data = await _mediator.Send(new GetTranslators(name));
+        var data = await _mediator.Send(new GetTranslators(name), cancellationToken);
         return Ok(data.ToModel().ToArray());
     }
 
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.Created, Type = typeof(int))]
-    public async Task<IActionResult> AddTranslator(AddTranslatorModel translator)
+    public async Task<IActionResult> AddTranslator(AddTranslatorModel translator, CancellationToken cancellationToken)
     {
-        var data = await _mediator.Send(new AddTranslator(translator.ToDto()));
+        var data = await _mediator.Send(new AddTranslator(translator.ToDto()), cancellationToken);
         return Ok(data);
     }
 
-    [HttpPut("Status/{id:min(1)}")]
+    [HttpPut("{id}/status")]
     [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(int))]
-    public async Task<IActionResult> UpdateTranslatorStatus([FromRoute] int id, [FromBody, Required] TranslatorStatusModel status)
+    public async Task<IActionResult> UpdateTranslatorStatus([FromRoute, Range(1, int.MaxValue)] int id, [FromBody, Required] TranslatorStatusModel status, CancellationToken cancellationToken)
     {
         _logger.LogInformation("User status update request: {status} for user {id}", status, id.ToString());
         try
         {
-            await _mediator.Send(new UpdateTranslatorStatus(id, (TranslatorStatusDto)status));
+            await _mediator.Send(new UpdateTranslatorStatus(id, (TranslatorStatusDto)status), cancellationToken);
             return Ok();
         }
         catch (NotFoundException)

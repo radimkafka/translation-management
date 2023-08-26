@@ -1,28 +1,19 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Net.NetworkInformation;
-using System.Xml;
-using System.Xml.Linq;
-using External.ThirdParty.Services;
+using System.Threading;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using TranslationManagement.Api.Controlers;
 using TranslationManagement.Api.Models;
 using TranslationManagement.Business;
-using TranslationManagement.Business.Dto;
 using TranslationManagement.Business.Exceptions;
-using TranslationManagement.Data;
-using TranslationManagement.Data.Entities;
+using ZadusApi.Web;
 
 namespace TranslationManagement.Api.Controllers
 {
     [ApiController]
+    [NotCertifiedTranslatorExceptionFilter]
     [Route("api/jobs")]
     public class JobsController : ControllerBase
     {
@@ -37,23 +28,23 @@ namespace TranslationManagement.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK, Type = typeof(JobModel[]))]
-        public async Task<IActionResult> GetJobs()
+        public async Task<IActionResult> GetJobs(CancellationToken cancellationToken)
         {
-            var data = await _mediator.Send(new GetJobs());
+            var data = await _mediator.Send(new GetJobs(), cancellationToken);
             return Ok(data.ToModel().ToArray());
         }
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created, Type = typeof(int))]
-        public async Task<IActionResult> CreateJob(AddJobModel job)
+        public async Task<IActionResult> CreateJob(AddJobModel job, CancellationToken cancellationToken)
         {
-            var data = await _mediator.Send(new AddJob(job.ToDto()));
+            var data = await _mediator.Send(new AddJob(job.ToDto()), cancellationToken);
             return Ok(data);
         }
 
         [HttpPost("file")]
         [ProducesResponseType((int)HttpStatusCode.Created, Type = typeof(int))]
-        public async Task<IActionResult> CreateJobWithFile(IFormFile file, string? customer)
+        public async Task<IActionResult> CreateJobWithFile(IFormFile file, string? customer, CancellationToken cancellationToken)
         {
             string? customerName;
             string? content;
@@ -65,7 +56,7 @@ namespace TranslationManagement.Api.Controllers
             {
                 return BadRequest(e.Message);
             }
-            if (string.IsNullOrEmpty(content) )
+            if (string.IsNullOrEmpty(content))
             {
                 var errors = new ModelStateDictionary();
                 errors.AddModelError("Content", "Cannot be empty!");
@@ -78,19 +69,19 @@ namespace TranslationManagement.Api.Controllers
                 return BadRequest(errors);
             }
             customerName ??= customer;
-            var data = await _mediator.Send(new AddJob(new() { CustomerName = customerName!, OriginalContent = content }));
+            var data = await _mediator.Send(new AddJob(new() { CustomerName = customerName!, OriginalContent = content }), cancellationToken);
             return Ok(data);
         }
 
-        [HttpPut("status")]
+        [HttpPut("{id}/status")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> UpdateJobStatus([FromBody] UpdateJobStatusModel jobStatusUpdate)
+        public async Task<IActionResult> UpdateJobStatus([FromRoute, Range(1, int.MaxValue)] int id, [FromBody] UpdateJobStatusModel jobStatusUpdate, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Job status update request received: {newStatus} for job {jobId} by translator {translatorId}", jobStatusUpdate.Status, jobStatusUpdate.JobId.ToString(), jobStatusUpdate.TranslatorId);
+            _logger.LogInformation("Job status update request received: {newStatus} for job {jobId} by translator {translatorId}", jobStatusUpdate.Status, id, jobStatusUpdate.TranslatorId);
 
             try
             {
-                await _mediator.Send(new UpdateJobStatus(jobStatusUpdate.ToDto()));
+                await _mediator.Send(new UpdateJobStatus(jobStatusUpdate.ToDto(id)), cancellationToken);
                 return Ok();
             }
             catch (NotFoundException)

@@ -44,9 +44,9 @@ internal static class Mapping
         TranslatedContent = model.TranslatedContent
     };
 
-    public static UpdateJobStatusDto ToDto(this UpdateJobStatusModel model) => new()
+    public static UpdateJobStatusDto ToDto(this UpdateJobStatusModel model, int jobId) => new()
     {
-        JobId = model.JobId,
+        JobId = jobId,
         Status = (JobStatusDto)model.Status,
         TranslatorId = model.TranslatorId
     };
